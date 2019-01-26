@@ -1,0 +1,17 @@
+application.name: m2
+
+server:
+  port: 9002
+
+consul:
+  dc: dc1
+  host: 127.0.0.1
+  remoteHost: http://172.18.0.1
+  healthCheck:
+    path: /health
+
+influx:
+  uri: http://localhost:8086
+  username: admin
+  password: admin
+  db: vertx-m2
