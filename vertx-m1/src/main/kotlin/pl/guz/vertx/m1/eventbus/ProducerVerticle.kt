@@ -9,9 +9,5 @@ class ProducerVerticle : AbstractVerticle() {
 
     override fun start() {
 
-        vertx.eventBus().send<JsonObject>("add", JsonObject().put("message", "hello")) {
-            val result = it.result()
-            logger.info("Got message: {}", result.body().encodePrettily())
-        }
     }
 }

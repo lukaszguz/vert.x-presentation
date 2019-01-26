@@ -13,16 +13,6 @@ class InsertJdbcVerticle : AbstractVerticle() {
     private val insertIntoSql = "insert into hello_table values(?, ?)"
 
     override fun rxStart(): Completable {
-        val jdbcClient = JDBCClient.createShared(vertx, JsonObject(), "dataSource")
-
-        return jdbcClient.rxGetConnection()
-                .flatMapCompletable { connection ->
-                    connection.rxUpdateWithParams(insertIntoSql, Json.array(1, "hello1"))
-                            .ignoreElement()
-                            .andThen(connection.rxUpdateWithParams(insertIntoSql, Json.array(2, "hello2")))
-                            .ignoreElement()
-                            .andThen(connection.rxClose())
-                }
-                .doOnComplete { logger.info("Inserted rows") }
+        return Completable.complete()
     }
 }

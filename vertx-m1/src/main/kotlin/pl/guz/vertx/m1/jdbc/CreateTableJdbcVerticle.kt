@@ -13,12 +13,6 @@ class CreateTableJdbcVerticle(private val jdbcConfig: JsonObject) : AbstractVert
 
     override fun rxStart(): Completable {
 
-        val jdbcClient = JDBCClient.createShared(vertx, jdbcConfig, "dataSource")
-        return jdbcClient.rxGetConnection()
-                .flatMapCompletable { sqlConnection ->
-                    sqlConnection.rxExecute(createTableSql)
-                            .andThen(sqlConnection.rxClose())
-                }
-                .doOnComplete { logger.info("Table created") }
+        return Completable.complete()
     }
 }

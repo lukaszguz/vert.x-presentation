@@ -11,13 +11,7 @@ class SelectJdbcVerticle : AbstractVerticle() {
     private val selectAllSql = "select * from hello_table"
 
     override fun start() {
-        val jdbcClient = JDBCClient.createShared(vertx, JsonObject(), "dataSource")
-        jdbcClient.rxQueryStream(selectAllSql)
-                .flatMapPublisher { sqlStream -> sqlStream.toFlowable().doAfterTerminate { sqlStream.close() } }
-                .map { it.toDomainObject() }
-                .doOnNext { logger.info("Row: {}", it) }
-                .doOnComplete { logger.info("Finished") }
-                .subscribe()
+
     }
 }
 
