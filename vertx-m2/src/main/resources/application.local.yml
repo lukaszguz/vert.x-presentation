@@ -1,0 +1,15 @@
+application.name: m2
+#server.port: 9002
+
+consul:
+  dc: dc1
+  host: 127.0.0.1
+  port: 8500
+  healthCheckPath: /health
+
+influx:
+  enable: true
+  uri: http://localhost:8086
+  username: admin
+  password: admin
+  db: vertx-m2

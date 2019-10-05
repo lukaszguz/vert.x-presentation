@@ -1,0 +1,24 @@
+application.name: m1
+
+dataSource:
+  jdbc:
+    url: jdbc:hsqldb:mem:test?shutdown=true
+    driver_class: org.hsqldb.jdbcDriver
+    max_pool_size: 30
+    user: SA
+    password: ""
+
+#server.port: 9001
+
+consul:
+  dc: dc1
+  host: 127.0.0.1
+  port: 8500
+  healthCheckPath: /health
+
+influx:
+  enable: false
+  uri: http://localhost:8086
+  username: admin
+  password: admin
+  db: vertx-m1
