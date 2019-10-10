@@ -7,7 +7,6 @@ import io.vertx.core.DeploymentOptions
 import io.vertx.core.VertxOptions
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
-import io.vertx.kotlin.core.json.jsonArrayOf
 import io.vertx.micrometer.MicrometerMetricsOptions
 import io.vertx.micrometer.VertxInfluxDbOptions
 import io.vertx.reactivex.config.ConfigRetriever
@@ -36,6 +35,17 @@ class Main {
             }
         }
 
+        private fun createConfiguration(bootstrapVertx: Vertx): ConfigRetriever {
+            val local = ConfigStoreOptions()
+                    .setType("file")
+                    .setFormat("yaml")
+                    .setConfig(JsonObject().put("path", "application.local.yml"))
+
+            return ConfigRetriever.create(bootstrapVertx, ConfigRetrieverOptions()
+                    .addStore(local)
+            )
+        }
+
         private fun extractConfiguration(config: JsonObject): Config {
             val consul = config.getJsonObject("consul")
             val influx = config.getJsonObject("influx")
@@ -59,26 +69,6 @@ class Main {
         }
 
         private fun randomPort() = ServerSocket(0).use { it.localPort }
-
-        private fun createConfiguration(bootstrapVertx: Vertx): ConfigRetriever {
-            val local = ConfigStoreOptions()
-                    .setType("file")
-                    .setFormat("yaml")
-                    .setConfig(JsonObject().put("path", "application.local.yml"))
-
-            val git = ConfigStoreOptions()
-                    .setType("git")
-                    .setFormat("yaml")
-                    .setConfig(JsonObject()
-                            .put("url", "https://github.com/lukaszguz/vert.x-presentation-configuration.git")
-                            .put("path", "local")
-                            .put("filesets", jsonArrayOf().add(JsonObject().put("pattern", "*-local.yml").put("format", "yaml"))))
-
-            return ConfigRetriever.create(bootstrapVertx, ConfigRetrieverOptions()
-                    .addStore(git)
-                    .addStore(local)
-            )
-        }
 
         private fun createVertx(influxConfig: InfluxConfig): Vertx {
             return Vertx.vertx(VertxOptions()

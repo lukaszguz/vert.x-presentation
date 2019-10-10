@@ -13,15 +13,6 @@ class HelloEndpointVerticle(
 ) : AbstractVerticle() {
 
     override fun start() {
-        router.get("/hello")
-                .handler { request ->
-                    request.response()
-                            .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                            .end(JsonObject().put("message", "hello from m2").encode())
-                }
 
-        vertx.createHttpServer()
-                .requestHandler(router)
-                .listen(serverConfig.port)
     }
 }

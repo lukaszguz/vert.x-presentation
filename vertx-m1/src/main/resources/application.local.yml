@@ -4,7 +4,7 @@ dataSource:
   jdbc:
     url: jdbc:hsqldb:mem:test?shutdown=true
     driver_class: org.hsqldb.jdbcDriver
-    max_pool_size: 30
+    max_pool_size: 10
     user: SA
     password: ""
 
@@ -17,7 +17,7 @@ consul:
   healthCheckPath: /health
 
 influx:
-  enable: false
+  enable: true
   uri: http://localhost:8086
   username: admin
   password: admin
