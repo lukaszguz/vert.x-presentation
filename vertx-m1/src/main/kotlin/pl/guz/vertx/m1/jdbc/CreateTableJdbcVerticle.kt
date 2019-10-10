@@ -12,7 +12,24 @@ import pl.guz.vertx.m1.logger
 class CreateTableJdbcVerticle(private val config: JsonObject) : AbstractVerticle() {
 
     override fun rxStart(): Completable {
-        return Completable.complete()
+
+        val jdbcClient = JDBCClient.createShared(
+                vertx,
+                config.getJsonObject("dataSource").getJsonObject("jdbc"),
+                "dataSource"
+        )
+
+        return jdbcClient.rxGetConnection()
+                .flatMapCompletable { sqlConnection ->
+                    sqlConnection.rxExecute(createTableSql)
+                            .andThen(
+                                    sqlConnection.rxUpdateWithParams(insertSql, Json.array("1", "Tomek")).ignoreElement()
+                            )
+                            .andThen(
+                                    sqlConnection.rxUpdateWithParams(insertSql, Json.array("2", "Marek")).ignoreElement()
+                            )
+                            .doFinally { sqlConnection.close() }
+                }
     }
 
     companion object {

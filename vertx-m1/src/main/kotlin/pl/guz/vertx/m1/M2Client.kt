@@ -18,7 +18,6 @@ class M2Client : AbstractVerticle() {
                             .rxSend()
                             .doOnSuccess { logger.info("Message from M2: {}", it.body()) }
                 }
-                .repeat(10)
                 .subscribe()
 
     }
