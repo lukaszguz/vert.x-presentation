@@ -10,6 +10,16 @@ import io.vertx.reactivex.servicediscovery.types.HttpEndpoint
 class M2Client : AbstractVerticle() {
     override fun start() {
 
+        val serviceDiscovery = ServiceDiscovery.create(vertx)
+        HttpEndpoint.rxGetWebClient(serviceDiscovery, JsonObject().put("name", "m2"))
+                .flatMap { webClient ->
+                    webClient.get("/hello")
+                            .`as`(BodyCodec.json(Response::class.java))
+                            .rxSend()
+                            .doOnSuccess { logger.info("Message from M2: {}", it.body()) }
+                }
+                .repeat(10)
+                .subscribe()
 
     }
 
@@ -17,3 +27,5 @@ class M2Client : AbstractVerticle() {
         private val logger by logger()
     }
 }
+
+data class Response(val message: String)
