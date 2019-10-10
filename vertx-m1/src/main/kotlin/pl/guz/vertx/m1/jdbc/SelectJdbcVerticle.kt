@@ -7,8 +7,21 @@ import io.vertx.reactivex.ext.jdbc.JDBCClient
 import pl.guz.vertx.m1.logger
 
 class SelectJdbcVerticle : AbstractVerticle() {
+
     override fun start() {
 
+        val jdbcClient = JDBCClient.createShared(
+                vertx,
+                JsonObject(),
+                "dataSource"
+        )
+
+        jdbcClient.rxQueryStream(selectSql)
+                .flatMapPublisher { it.toFlowable() }
+                .map { it.toDomainObject() }
+                .doOnNext { logger.info("Row: {}", it) }
+                .doOnComplete { logger.info("Finish") }
+                .subscribe()
 
     }
 
